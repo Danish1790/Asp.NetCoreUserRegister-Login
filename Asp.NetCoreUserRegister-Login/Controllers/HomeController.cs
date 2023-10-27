@@ -1,20 +1,27 @@
-﻿using Asp.NetCoreUserRegister_Login.Models;
+﻿using Asp.NetCoreUserRegister_Login.Areas.Identity.Data;
+using Asp.NetCoreUserRegister_Login.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Asp.NetCoreUserRegister_Login.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            this._userManager = userManager;
         }
 
         public IActionResult Index()
         {
+            ViewData["UserID"] = _userManager.GetUserId(this.User);
             return View();
         }
 
